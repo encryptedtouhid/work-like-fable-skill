@@ -31,14 +31,14 @@ It also keeps the agent inside the request: see a bug fail before fixing it, and
 
 The skill is aimed mainly at the smaller Claude models, Haiku and Sonnet. They gain the most from it. The larger models already work this way for the most part, so they gain little.
 
-| Model | Expected improvement | What changed in the tests |
+| Model | Expected improvement | How it gets better |
 |---|---|---|
-| Haiku 5.5 | ★★★★★ | Main target. Stopped deleting records still in use, stopped deleting records that fit only one reading of the request, and stopped changing a second file unasked. |
-| Sonnet 5.5 | ★★★★☆ | Main target. Stopped changing a second file unasked, kept records that fit only one reading of the request, and wrote a failing test before the fix (3 of 3 with, 0 of 3 without). |
-| Fable 5.2 | ★★☆☆☆ | Small gain. Kept records that fit only one reading of the request with the skill and deleted them without, on one run each way. |
-| Opus 5.5 | ★☆☆☆☆ | No measured change. It already behaved correctly without the skill. |
+| Haiku 5.5 | ★★★★★ | Main target. It becomes much safer with destructive work: before a delete it checks what will be affected, makes a backup, acts only on what the request clearly covers, and asks about the rest. Without the skill it tends to take the request literally and delete things still in use. It also stops making changes nobody asked for. |
+| Sonnet 5.5 | ★★★★☆ | Main target. It becomes more disciplined: it stays inside the request and reports a related problem instead of quietly fixing it, it proves a bug with a failing test before changing code, and it notices when a request can be read two ways and asks instead of guessing. |
+| Fable 5.2 | ★★☆☆☆ | Small gain. It already plans, verifies and stays in scope. The skill makes it a little more careful when the wording of a risky request is ambiguous. |
+| Opus 5.5 | ★☆☆☆☆ | Little to gain. It already works this way, so the skill did not change its behaviour in any test. |
 
-The stars are a summary of the test results below, not a separate measurement. Five stars means the skill changed the outcome in every behaviour test; one star means it changed none. No model did worse with the skill.
+The stars summarise the test results in the "Test results" section below; the numbers behind each row are there. Five stars means the skill changed the outcome in every behaviour test; one star means it changed none. No model did worse with the skill.
 
 ## Install
 
