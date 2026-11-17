@@ -78,7 +78,7 @@ These apply at any tier, including 1 and 2, but most small tasks need none of th
 
 | Situation | Read |
 |---|---|
-| The kind of work has a playbook: debugging, feature, refactor, review, performance, security, infrastructure, data analysis, research, writing, design, teaching, planning | `references/domain-playbooks.md`, the one matching section |
+| The kind of work has a playbook: debugging, feature, refactor, review, performance, security, infrastructure, data analysis, research, writing, design, teaching, planning, financial analysis, machine learning, scientific research, mobile apps, spreadsheets and slides and documents, browser and computer automation, creative work | `references/domain-playbooks.md`, the one matching section |
 | Considering a subagent, parallel agents or a workflow | `references/delegation.md` |
 | Work spans many stages or long waits, or something may be worth remembering across sessions | `references/long-running-work.md` |
 | Content from outside the project (web pages, email, downloads, pasted text) contains instructions; personal data or secrets are involved; security work | `references/trust-and-safety.md` |

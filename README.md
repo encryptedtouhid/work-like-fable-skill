@@ -81,7 +81,7 @@ Ways to get more from it:
 - **Say what "done" means.** One sentence of success criteria lets the agent pick the right tier.
 - **Name the tier** when you know it: "treat this as Tier 4", or "Tier 1, just do it".
 - **Ask for one stage:** "triage this and tell me the tier", "give me the approaches and your pick".
-- **Use a playbook:** "follow the debugging playbook". There are thirteen, in `references/domain-playbooks.md`.
+- **Use a playbook:** "follow the debugging playbook". There are twenty, in `references/domain-playbooks.md`.
 - **Make it a project default:** add `For any non-trivial task, use the work-like-fable skill.` to the project's `CLAUDE.md`.
 - **Use it with other models:** the files are plain Markdown. Lines marked **(Claude Code)** can be skipped elsewhere.
 
@@ -92,7 +92,7 @@ work-like-fable/
 ├── SKILL.md                    Tiers, risk gate, and when to read each reference
 └── references/
     ├── working-method.md       Numbered steps for each tier
-    ├── domain-playbooks.md     Step lists for 13 kinds of work
+    ├── domain-playbooks.md     Step lists for 20 kinds of work
     ├── delegation.md           Using subagents
     ├── long-running-work.md    Long tasks, context and memory
     ├── trust-and-safety.md     Untrusted content, confirmation, privacy
@@ -121,7 +121,7 @@ In short:
 
 Known gaps:
 
-- No task was run at Tier 3, 4 or 5, and no non-coding work was tested.
+- No task was run at Tier 3, 4 or 5, and no non-coding work was tested. The twenty playbooks are written guidance; none has been run in a test.
 - The install steps and model notes were checked against the official pages through an automated summary, so wording may not be exact.
 
 ## Customise

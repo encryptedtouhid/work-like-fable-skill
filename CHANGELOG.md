@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.2.0 — 2026-11-17
+
+- Seven new playbooks: financial analysis, machine learning, scientific research, mobile app work, spreadsheets and slide decks and documents, browser and computer automation, creative work. Twenty in total. None has been tested yet.
+- README: a section on which models the skill is for and how each gets better.
+
 ## 1.1.1 — 2026-11-17
 
 - Risk gate: a definition in the project's documentation does not settle which field the requester meant.
