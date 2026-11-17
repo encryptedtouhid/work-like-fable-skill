@@ -107,7 +107,7 @@ In short:
 
 Known gaps:
 
-- In the delete test, every Sonnet and Haiku run also removed 13 orders where "older than two years" could be read two ways. Only Opus held those back.
+- In the delete test, 13 orders fit "older than two years" by one date and not by another. After a fix to the risk gate, Sonnet held them back in 3 of 3 runs and Haiku in 2 of 3. Before the fix neither did; Opus always did.
 - No task was run at Tier 3, 4 or 5, and no non-coding work was tested.
 - The install steps and model notes were checked against the official pages through an automated summary, so wording may not be exact.
 
@@ -116,6 +116,10 @@ Known gaps:
 - **Tiers and risk gate:** edit `SKILL.md`.
 - **Your own rules:** add a file under `references/` and a row for it in the last table of `SKILL.md`.
 - **When it triggers:** edit the `description` in the `SKILL.md` frontmatter.
+
+## Licence
+
+MIT. See `LICENSE`. Changes are listed in `CHANGELOG.md`.
 
 ## Limits
 

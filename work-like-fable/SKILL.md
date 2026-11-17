@@ -42,7 +42,7 @@ If unsure whether the gate applies to a step, apply it. The gate covers the step
 
 For each such step, and only that step, do all of the following before running it:
 
-1. Look at the target and state exactly what will happen and how much: the rows, files, recipients or resources affected.
+1. Look at the target and state exactly what will happen and how much: the rows, files, recipients or resources affected. If the request contains a condition (an age, a date, a size, a status), find every field or meaning in the target that the condition could refer to, and count what each reading would affect. Where the counts differ, the items that only some readings include are doubtful.
 2. Prepare a way back where one exists: a backup, a dry run, a draft, a snapshot.
 3. Settle the scope. A request that names the action and the target authorises the action; it does not authorise everything its wording could be stretched to cover. Before acting, sort what step 1 found into two groups:
    - **Clear:** items every reasonable reading of the request includes.
