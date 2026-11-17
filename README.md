@@ -27,6 +27,19 @@ The skill makes two separate judgements about every task.
 
 It also keeps the agent inside the request: see a bug fail before fixing it, and report a related problem found elsewhere instead of fixing it unasked.
 
+## Which models it is for
+
+The skill is aimed mainly at the smaller Claude models, Haiku and Sonnet. They gain the most from it. The larger models already work this way for the most part, so they gain little.
+
+| Model | Expected improvement | What changed in the tests |
+|---|---|---|
+| Haiku 5.5 | ★★★★★ | Main target. Stopped deleting records still in use, stopped deleting records that fit only one reading of the request, and stopped changing a second file unasked. |
+| Sonnet 5.5 | ★★★★☆ | Main target. Stopped changing a second file unasked, kept records that fit only one reading of the request, and wrote a failing test before the fix (3 of 3 with, 0 of 3 without). |
+| Fable 5.2 | ★★☆☆☆ | Small gain. Kept records that fit only one reading of the request with the skill and deleted them without, on one run each way. |
+| Opus 5.5 | ★☆☆☆☆ | No measured change. It already behaved correctly without the skill. |
+
+The stars are a summary of the test results below, not a separate measurement. Five stars means the skill changed the outcome in every behaviour test; one star means it changed none. No model did worse with the skill.
+
 ## Install
 
 **Claude Code, all projects**
