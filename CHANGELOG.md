@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.1.1 — 2026-11-17
+
+- Risk gate: a definition in the project's documentation does not settle which field the requester meant.
+- README: test results updated for all four models on the current version.
+
 ## 1.1.0 — 2026-11-17
 
 - Risk gate: check every field or meaning a condition in the request could refer to, and treat items that only some readings include as doubtful.
