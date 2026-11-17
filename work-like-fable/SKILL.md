@@ -44,12 +44,21 @@ For each such step, and only that step, do all of the following before running i
 
 1. Look at the target and state exactly what will happen and how much: the rows, files, recipients or resources affected.
 2. Prepare a way back where one exists: a backup, a dry run, a draft, a snapshot.
-3. Get confirmation. A request that explicitly names this action and this target is the confirmation for the action; still confirm any scope the request left open (which rows, which recipients, which environment). If step 1 shows that more is affected than the request implies, stop and confirm again.
+3. Settle the scope. A request that names the action and the target authorises the action; it does not authorise everything its wording could be stretched to cover. Before acting, sort what step 1 found into two groups:
+   - **Clear:** items every reasonable reading of the request includes.
+   - **Doubtful:** items only some readings include (the request's words fit two fields, dates or boundaries), items still active or awaiting something, items another rule or note says to keep or to leave alone, and items of a different kind from what was named.
+
+   Act on the clear group only. Hold the doubtful group, say what is in it and why, and ask. If the doubtful group is most of the target, or the action cannot be partly done, do nothing and ask. Being unable to reach the user is a reason to hold more back, never a reason to go ahead.
 4. Run it, then verify the result from outside.
 
 The gate does not change the tier. A fully specified one-statement production delete is Tier 1 in difficulty and still goes through all four gate steps, and its report includes what step 1 found.
 
-## Step 3: Run the tier
+## Step 3: Stay inside the request
+
+- For a bug, see it fail before fixing it: write or run a check that fails, then make the change, then watch the check pass.
+- When the same fault or a related problem turns up somewhere the request did not mention, report it with a recommendation and leave it unchanged. Fix it unasked only when nobody could depend on the current behaviour. Anything that changes what users or customers experience (when messages are sent, what they are charged, what they can access) counts as something someone may depend on.
+
+## Step 4: Run the tier
 
 For Tiers 1 and 2, the table row is the whole process.
 
@@ -63,7 +72,7 @@ For Tiers 3 to 5, open `references/working-method.md`, find the numbered section
 - "When to stop and ask"
 - "Failure patterns and their fixes"
 
-## Step 4: Load a supporting reference only when its situation arises
+## Step 5: Load a supporting reference only when its situation arises
 
 These apply at any tier, including 1 and 2, but most small tasks need none of them. Read one section, not the whole file, where a section is enough.
 
