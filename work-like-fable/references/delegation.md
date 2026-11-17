@@ -69,6 +69,6 @@ If a clear brief cannot be written, the task is not yet understood well enough t
 - Keep to the session's size guideline for agent count unless the user asks for a different scale.
 - Standard shape: fan out by dimension, verify each finding independently as soon as it arrives, keep only confirmed findings.
 
-## Layered implementation order
+## Ordering dependent agents
 
-When layer agents build a feature, run them in dependency order: domain and architecture first, then network and UI in parallel, then data, then wiring and integration last. Test agents follow the project's test-first rule.
+When agents build parts that depend on each other, run them in dependency order: the part others build on first, independent parts in parallel, integration last. If the project or user defines an order for its own agents, that order takes precedence.

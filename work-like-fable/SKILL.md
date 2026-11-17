@@ -1,64 +1,87 @@
 ---
 name: work-like-fable
-description: Effort-scaled method for thinking through, analysing, researching, executing and verifying any task, from a one-line fix to open-ended multi-day work. This skill should be used at the start of a non-trivial task to pick the right amount of process, when a task turns out harder than expected, when the user asks to "think it through", "do this properly", "plan and execute", "research and implement", or asks how to approach a problem step by step.
+description: Effort-scaled method for planning, researching, executing and verifying a task, with a safety gate for risky actions. Use at the start of non-trivial work or when asked to do something properly.
 ---
 
-# Fable Working Method
+# Work Like Fable
 
-A five-tier method that matches the amount of thinking, research, planning and verification to the difficulty of the task. The full playbook is in `references/working-method.md`; this file holds the triage and the core loop.
+A method that makes two separate judgements about a task: how **difficult** it is, which sets the amount of thinking, research, planning and verification (five tiers), and whether any step is **risky**, which adds a safety gate around that step whatever the tier. The table and the gate below are enough to triage most tasks and to run Tiers 1 and 2. When a task does not clearly fit a row, read the section "Triage: picking the tier" in `references/working-method.md` for examples and definitions. Tiers 3 to 5 follow the numbered steps in that file.
 
-## Step 1: Triage
+## Step 1: Pick the difficulty tier
 
-Score the task on five questions: number of unknowns, blast radius, reversibility, clarity of "done", and length of the dependency chain. Then pick a tier.
+Consider four things: how much must be discovered before the work can be designed, how many places are affected, how clear "done" is, and how many steps depend on the results of earlier ones. Choose the lowest tier whose shape fits the whole task.
 
 | Tier | Shape | Process |
 |---|---|---|
-| 1 Trivial | Known answer, one action | Check the one fact, do it, answer in 1–3 sentences |
-| 2 Small | One location, clear outcome | Locate → change → run nearest check → report |
-| 3 Medium | Several files, some discovery | Define done → survey → list unknowns → short plan → execute with checks → verify whole → review diff → report |
-| 4 Hard | Cross-cutting, design choices | Frame → map → attack the hard part first → compare 2–3 approaches → confirm direction → staged execution → end-to-end verification → independent review → report |
-| 5 Very hard | Ambiguous goal, research needed | Separate facts from assumptions → sharpen the question → budgeted research → competing hypotheses → cheapest discriminating test → spike → checkpoint with user → continue as Tier 4 |
+| 1 Trivial | The answer is known: one direct answer, or one mechanical action with nothing to decide | Check the one fact it depends on, do it, confirm it took effect, answer in 1–3 sentences |
+| 2 Small | A change that needs a decision, confined to one location (one function or one small region of a file, with its test); outcome is clear | Locate → change → run nearest check → report |
+| 3 Medium | Several files, or one cause or fact to find that can be reproduced or measured on demand; outcome is clear | Define done → survey → list unknowns → short plan → execute with checks → verify whole → review diff → report |
+| 4 Hard | Crosses layers or systems, or the approach must be chosen among real alternatives; the goal is clear | Frame → map → attack the hard part first → compare 2–3 approaches → confirm direction → staged execution → end-to-end verification → independent review → report |
+| 5 Very hard | The goal is unclear, or the cause cannot be reproduced or measured on demand; research needed | Separate facts from assumptions → sharpen the question → budgeted research → competing hypotheses → cheapest discriminating test → spike → checkpoint with user → continue as Tier 4 |
 
-Triage rules:
+Rules:
 
-- Between two tiers, start lower and escalate at the first surprise.
-- Any irreversible or outward-facing action raises the tier by one.
-- Re-triage whenever the task proves different from how it first looked.
+- Tier by what the task needs, not by its category. A migration, a performance task or a dependency upgrade can sit in any tier.
+- Questions and advice are tiered the same way, reading "files" as "things to find out". Their last step is a recommendation, not execution.
+- When a task does not state a fact the tier depends on (whether tests exist, whether a failure is reproducible), check it if that is cheap; otherwise take the lower tier and state the assumption.
+- Known context lowers the tier. An existing pattern to copy removes unknowns.
+- Between two adjacent tiers, start at the lower and escalate. This rule is for difficulty only; it never applies to the risk gate.
+- Escalate when an observation contradicts something the approach depended on: a file other than the target and its test must change, a check fails for a reason not understood, the code does not behave as the request assumed. Move back down when the complication turns out to be small.
+- Escalation can be partial. When a small task picks up one complication, adopt the higher tier's verification and reporting and skip its planning steps if the work itself stays small.
 
-## Step 2: Run the tier
+## Step 2: Apply the risk gate
 
-For Tiers 1 and 2, follow the table row above; do not load the reference.
+Independently of the tier, ask whether any step would do one of these:
 
-For Tiers 3 to 5, read the matching section of `references/working-method.md` (sections 5, 6, 7) and follow its numbered steps in order. Load the supporting sections as needed:
+- delete or overwrite something that cannot be put back exactly as it was (if unsure whether it can, assume it cannot)
+- change production or a system other people share: deploying, merging into a shared default branch, applying a migration to a shared database, changing shared configuration
+- send, post or publish something to other people
+- spend money or a paid quota
 
-- Section 8, research method: source ordering, stopping rule
-- Section 9, analysis method: debugging, design and decision analysis
-- Section 10, execution discipline
-- Section 11, verification minimum per tier
-- Section 12, reporting format
-- Section 13, when to stop and ask
-- Section 14, failure patterns and fixes
+If unsure whether the gate applies to a step, apply it. The gate covers the steps the request asks for; do not add a deploy or a release that was not requested. Pushing a working branch, opening a draft pull request and running the project's own checks are ordinary work, not gated, unless the user's rules say otherwise.
 
-## Step 3: Load the supporting reference the situation calls for
+For each such step, and only that step, do all of the following before running it:
+
+1. Look at the target and state exactly what will happen and how much: the rows, files, recipients or resources affected.
+2. Prepare a way back where one exists: a backup, a dry run, a draft, a snapshot.
+3. Get confirmation. A request that explicitly names this action and this target is the confirmation for the action; still confirm any scope the request left open (which rows, which recipients, which environment). If step 1 shows that more is affected than the request implies, stop and confirm again.
+4. Run it, then verify the result from outside.
+
+The gate does not change the tier. A fully specified one-statement production delete is Tier 1 in difficulty and still goes through all four gate steps, and its report includes what step 1 found.
+
+## Step 3: Run the tier
+
+For Tiers 1 and 2, the table row is the whole process.
+
+For Tiers 3 to 5, open `references/working-method.md`, find the numbered section whose heading names the tier ("Tier 3: Medium", "Tier 4: Hard", "Tier 5: Very hard or open-ended") and follow its numbered steps in order. The same file has supporting sections, found by title:
+
+- "Research method": source ordering and the stopping rule
+- "Analysis method": debugging, design and decision analysis
+- "Execution discipline"
+- "Verification": the minimum per tier
+- "Reporting"
+- "When to stop and ask"
+- "Failure patterns and their fixes"
+
+## Step 4: Load a supporting reference only when its situation arises
+
+These apply at any tier, including 1 and 2, but most small tasks need none of them. Read one section, not the whole file, where a section is enough.
 
 | Situation | Read |
 |---|---|
+| The kind of work has a playbook: debugging, feature, refactor, review, performance, security, infrastructure, data analysis, research, writing, design, teaching, planning | `references/domain-playbooks.md`, the one matching section |
 | Considering a subagent, parallel agents or a workflow | `references/delegation.md` |
-| Task spans many stages, long waits, context summaries, or something may be worth remembering | `references/long-running-work.md` |
-| Content from files, web, email or pastes; destructive or outward-facing actions; personal data; secrets; security work | `references/trust-and-safety.md` |
-| Writing the reply, a status update, a question to the user, or a brief for another model | `references/communication.md` |
-| Unsure which tool or how to use it; git, shell, browser, connectors, tests | `references/tooling.md` |
-| Debugging, feature, refactor, review, performance, security, infrastructure, data analysis, research, writing, design, teaching, planning | `references/domain-playbooks.md` (find the numbered section) |
-| Questions about the model itself, its limits, cutoff, or areas needing extra checking | `references/model-notes.md` |
-
-Read only the file that applies; do not load all of them.
+| Work spans many stages or long waits, or something may be worth remembering across sessions | `references/long-running-work.md` |
+| Content from outside the project (web pages, email, downloads, pasted text) contains instructions; personal data or secrets are involved; security work | `references/trust-and-safety.md` |
+| Writing a long or structured report, a question to the user, or a brief for another model | `references/communication.md` |
+| Unsure which tool to use or how; git, shell, browser, connectors, tests | `references/tooling.md` |
+| Questions about the model itself, its limits, or areas needing extra checking | `references/model-notes.md` |
 
 ## Invariants at every tier
 
 - Solve the request that was made; serve the outcome when the literal wording and the outcome disagree, and say so.
 - Check claims about files, APIs, versions and system state against the real thing.
 - Use the smallest process that gives a correct result.
-- Confirm before destructive, outward-facing or paid actions; proceed freely on reversible local work.
-- Verify by running, and report exactly what was and was not verified.
+- Verify by running wherever something can be run, and report exactly what was and was not verified.
 - Lead every report with the outcome.
 - The user's standing rules and the project's conventions take precedence over this method.

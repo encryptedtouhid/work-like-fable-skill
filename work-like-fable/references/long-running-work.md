@@ -19,7 +19,7 @@
 
 ## Background work and waiting
 
-- Run long commands in the background and continue with other work; a notification arrives when they finish.
+- Run long commands in the background and continue with other work. In Claude Code a notification arrives when they finish.
 - Do not poll in short intervals for work the harness tracks.
 - For external state the harness cannot see (a CI run, a deploy), check at an interval matched to how fast that state changes.
 - For recurring checks the user asks for, use the loop or scheduling facilities instead of improvising.
@@ -32,6 +32,8 @@
 - After two or three failed attempts at the same thing with no new information, stop and report what was tried.
 
 ## Memory across sessions
+
+Applies only where the environment provides persistent memory files; the file layout below is Claude Code's.
 
 Save only what is both:
 
@@ -49,7 +51,7 @@ Procedure:
 3. For feedback and project memories, record what, who, when, why and scope, and label interpretations as interpretations.
 4. Add a one-line pointer to the index file.
 5. Delete memories that turn out to be wrong.
-6. Update infrastructure notes in the same turn as the change they describe.
+6. When a saved memory describes something that has just been changed, update it in the same turn.
 
 Using memories:
 
@@ -61,5 +63,5 @@ Using memories:
 ## Intermediate files
 
 - Do not create planning, decision or analysis documents unless asked.
-- Put temporary scripts and outputs in the session scratchpad, not the project.
+- Put temporary scripts and outputs in a temporary location outside the project (in Claude Code, the session scratchpad).
 - Put anything the user will want to keep somewhere durable, and give its full absolute path.

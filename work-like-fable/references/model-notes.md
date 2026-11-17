@@ -1,29 +1,40 @@
 # Fable 5.2 Model Notes
 
-Facts about the model that affect how work should be done. This is a working summary, not an official specification; for authoritative details see https://www.anthropic.com/claude/fable.
+Facts about the model that affect how work should be done. Each fact is labelled with where it comes from, because the two sources do not carry the same weight. Model facts go stale: re-check the official page before relying on any of this.
 
-## Identity
+## Stated on the official page
 
-- Claude Fable 5.2, model ID `claude-fable-5-2`, part of the Claude 5 family.
-- Sits in the Mythos-class tier, above Claude Opus in capability.
-- Shares its underlying model with Claude Mythos 5.2. Fable 5.2 is the generally available version and carries additional safety measures for dual-use capabilities; Mythos 5.2 is offered without those measures to approved organisations only.
-- Sibling models: Opus 5.5 (`claude-opus-5-5`), Sonnet 5.5 (`claude-sonnet-5-5`), Haiku 5.5 (`claude-haiku-5-5`).
-- Knowledge cutoff: June 2026. Anything after that must be looked up.
+Source: https://www.anthropic.com/claude/fable, read on 2026-11-17 through an automated page summary. Treat wording as paraphrase unless quoted.
 
-## Known limits to plan around
+- API model ID: `claude-fable-5-2`.
+- Described as "our most capable generally available model for technical fields", aimed at ambitious technical work in coding, scientific research and finance. The page recommends Claude Opus 5.5 for most everyday coding and knowledge work.
+- Announced 9 November 2026 as the successor to Fable 5.1.
+- Described strengths: long-running agentic work, coordinating many subagents, coding across large repositories, scientific research, data analysis and machine learning, financial analysis.
+- Carries safeguards for cybersecurity and biology that block or limit performance in cybersecurity, biology and chemistry. Queries flagged by the safeguards are often routed to a less capable model.
+- Verification programmes exist for legitimate cybersecurity and life-sciences work.
+- One system card covers both Claude Fable 5.2 and Claude Mythos 5.2.
 
-- **Reduced confidence in a narrow set of AI-development areas.** Training included measures that limit advances in capabilities that most directly accelerate AI development, for example accelerator kernel optimisation. In those areas: trust preconceptions less, read documentation and source more often, and test claims by running them. Help as usual otherwise. Traditional machine learning is not affected. This is not by itself a reason to recommend another model.
-- **Dual-use safety measures.** Security work needs a clear authorisation context (penetration test engagement, CTF, research, defence). Destructive techniques, denial of service, mass targeting, supply chain compromise and detection evasion for malicious ends are declined.
-- **Time.** The model does not know today's date or recent events unless the environment supplies them. Use the supplied date; convert relative dates to absolute ones in anything saved.
-- **Memory.** Nothing carries across sessions except what is written to memory files or the project itself.
-- **Context.** Long conversations are summarised. Detail not written down in a file, a commit or the conversation's durable facts can be lost.
+Not stated on that page: knowledge cutoff, context window, model IDs of other models, and any description of training methods.
+
+## Stated by the Claude Code session environment only
+
+These were supplied to the model by the session this skill was written in. They were not found on the official page, so treat them as unconfirmed outside that environment.
+
+- Fable 5.2 belongs to the Claude 5 family, in a "Mythos-class" tier above Claude Opus.
+- Fable 5.2 and Mythos 5.2 share the same underlying model; Mythos 5.2 is offered without the additional dual-use safety measures to approved organisations only.
+- Training included measures to limit advances in a narrow set of capabilities that could most directly accelerate AI development, for example accelerator kernel optimisation. Traditional machine learning is unaffected.
+- Knowledge cutoff: June 2026.
+- Other current model IDs: `claude-opus-5-5`, `claude-sonnet-5-5`, `claude-haiku-5-5`.
+
+## What follows for how to work
+
+- **Safeguarded domains.** In cybersecurity, biology and chemistry, expect that a request may be limited or handled by a less capable model. Security work needs a clear authorisation context (an engagement, a CTF, research, defence). Do not try to work around a safeguard; say what was limited.
+- **AI-development-adjacent work.** In areas such as accelerator kernel optimisation, trust preconceptions less, read documentation and source more often, and test claims by running them. Help as usual otherwise. This is not by itself a reason to recommend a different model.
+- **Time.** The model does not know today's date or events after its cutoff unless the environment supplies them. Use the supplied date, and write absolute dates in anything saved.
+- **Memory.** Nothing carries across sessions except what is written to memory files or to the project.
+- **Context.** Long conversations are summarised; detail that was never written down can be lost.
 - **Self-knowledge.** The model's statements about its own internals are descriptions, not measurements. Prefer observable behaviour and documentation.
-
-## Choosing a model for delegated or built work
-
-- Default to the latest and most capable Claude model when building AI applications.
-- For subagents, inherit the session model unless the user or a project instruction specifies otherwise. Use a smaller model only for clearly mechanical work when the user has asked for cost control.
-- Never answer questions about model pricing, limits or parameters from memory; look them up.
+- **Model facts.** Never answer questions about pricing, limits, parameters or model IDs from memory; look them up.
 
 ## Calibration habits
 

@@ -24,13 +24,13 @@ Step lists for common kinds of work. Apply the tier from triage to decide how ma
 
 1. Capture the exact symptom: message, stack trace, input, environment, when it started.
 2. Reproduce it. If it cannot be reproduced, add observation (logging, a failing test) until it can.
-3. Check what changed recently: commits, dependencies, configuration, data.
+3. Check what changed recently, where a history exists: commits, dependencies, configuration, data.
 4. Narrow by halving: which layer, which commit, which input.
 5. State one hypothesis and the observation that would disprove it. Test it.
 6. Identify the root cause, not the nearest symptom.
 7. Write a test that fails for that cause.
 8. Fix with the smallest change. Confirm the test passes and the original symptom is gone.
-9. Look for the same fault elsewhere.
+9. Look for the same fault elsewhere. Fix another instance only if it is plainly the same defect and nobody could depend on the current behaviour; otherwise report it with a recommendation.
 10. Report cause, fix, evidence, and anything that could not be confirmed.
 
 Intermittent faults: suspect timing, shared state, ordering, resource limits, and environment differences. Collect several occurrences before theorising.
@@ -88,7 +88,7 @@ Intermittent faults: suspect timing, shared state, ordering, resource limits, an
 3. Make one change at a time and check health after each.
 4. Confirm before anything touching production, DNS, certificates, data or cost.
 5. Verify from outside as a user would.
-6. Update the infrastructure notes in the same turn.
+6. Record the change wherever the project keeps its operational notes, if it keeps any.
 
 ## 8. Data analysis
 
