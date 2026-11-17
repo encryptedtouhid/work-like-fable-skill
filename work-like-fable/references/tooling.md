@@ -1,11 +1,13 @@
 # Tool Use
 
+Written for Claude Code. Lines marked **(Claude Code)** name a feature of that environment; in another agent, apply the intent and skip the mechanism. Everything else is general.
+
 ## General habits
 
 - Check for an applicable skill before starting; a skill for the task replaces the default approach. The user's direct instructions outrank skills, and skills outrank defaults.
 - Prefer the dedicated tool over a shell command when one fits: the file reader over `cat`, the editor over `sed`, search tools over ad-hoc `find`.
 - Make independent calls in one batch so they run in parallel. Make dependent calls in sequence and never guess a value another call will return.
-- Load deferred tools in one request listing everything expected, not one request per tool.
+- **(Claude Code)** Load deferred tools in one request listing everything expected, not one request per tool.
 - Use absolute paths. Avoid `cd` inside compound commands.
 - A foreground `sleep` is the wrong way to wait; run the command in the background or use a monitor.
 
@@ -23,7 +25,8 @@
 - Quote paths and variables. Do not interpolate untrusted values.
 - Read the whole error output before reacting.
 - Set a timeout suited to the command; run long ones in the background.
-- No interactive flags. If the user must run something interactive, suggest they run it with the `!` prefix so the output lands in the session.
+- No interactive flags.
+- **(Claude Code)** If the user must run something interactive, suggest they run it with the `!` prefix so the output lands in the session.
 
 ## Git and GitHub
 
@@ -65,5 +68,7 @@
 - Use the platform's reviewer after writing code where the project requires it.
 
 ## Feedback on the tooling itself
+
+**(Claude Code)** Applies only where the environment offers a way to draft product feedback.
 
 At a clear moment (a reproducible tool failure resolved or abandoned, a missing capability that blocked a reasonable request, a model-behaviour slip), draft one feedback item per distinct issue, with facts only, people referred to by role, and no secrets.

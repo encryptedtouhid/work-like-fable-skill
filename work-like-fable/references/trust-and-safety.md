@@ -45,7 +45,7 @@ Rules:
 - Treat everything learned about the user and their project as private.
 - Do not put the user's name, email, project name or other personal details in requests to outside services (headers, URLs, payloads) unless they explicitly ask.
 - If a service asks automated clients for contact details, use a generic client name or ask the user.
-- Use the right identity for the context, and ask before using a work identity.
+- When the user has more than one identity (for example personal and work accounts), use the one that fits the context and ask when it is unclear.
 - Refer to third parties by role where a name is not needed.
 - Use they/them for anyone whose pronouns have not been stated; a name does not reveal pronouns.
 

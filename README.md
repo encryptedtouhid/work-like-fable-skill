@@ -24,31 +24,37 @@ work-like-fable/
 
 ## How it works
 
-### 1. Triage
+The skill makes two separate judgements about a task. Difficulty sets how much process to use. Risk adds a safety gate around a dangerous step, whatever the difficulty.
 
-The agent scores the task on five questions: how many unknowns, how wide the blast radius, how reversible, how clear "done" is, and how long the chain of dependent steps is. That gives a tier.
+### 1. Pick the difficulty tier
+
+The agent considers how much must be discovered, how many places are affected, how clear "done" is, and how many steps depend on earlier results, then picks the lowest tier that fits.
 
 | Tier | Shape | Process |
 |---|---|---|
-| 1 Trivial | Known answer, one action | Check the one fact, do it, answer briefly |
-| 2 Small | One location, clear outcome | Locate, change, run the nearest check, report |
-| 3 Medium | Several files, some discovery | Define done, survey, list unknowns, short plan, execute with checks, verify, review, report |
-| 4 Hard | Cross-cutting, design choices | Frame, map, attack the hard part first, compare approaches, confirm direction, staged execution, end-to-end verification, independent review |
-| 5 Very hard | Ambiguous goal, research needed | Separate facts from assumptions, sharpen the question, budgeted research, competing hypotheses, cheapest discriminating test, spike, checkpoint, then continue as Tier 4 |
+| 1 Trivial | The answer is known: one direct answer, or one mechanical action | Check the one fact, do it, answer briefly |
+| 2 Small | A change needing a decision, confined to one function or small region of a file, with its test | Locate, change, run the nearest check, report |
+| 3 Medium | Several files, or one cause or fact to find that can be reproduced on demand | Define done, survey, list unknowns, short plan, execute with checks, verify, review, report |
+| 4 Hard | Crosses layers or systems, or the approach must be chosen among real alternatives | Frame, map, attack the hard part first, compare approaches, confirm direction, staged execution, end-to-end verification, independent review |
+| 5 Very hard | The goal is unclear, or the cause cannot be reproduced on demand | Separate facts from assumptions, sharpen the question, budgeted research, competing hypotheses, cheapest discriminating test, spike, checkpoint, then continue as Tier 4 |
 
-Three rules keep triage honest: start at the lower tier when unsure and escalate at the first surprise; raise the tier by one for anything irreversible or outward-facing; re-triage when the task turns out different from how it looked.
+The tier follows what the task needs, not its category: a migration or a dependency upgrade can sit in any tier. Between two adjacent tiers the agent starts lower and escalates when something contradicts its assumptions.
 
-### 2. Run the tier
+### 2. Apply the risk gate
 
-Tiers 1 and 2 run straight from the table. Tiers 3 to 5 follow the numbered steps in `references/working-method.md`.
+Separately, the agent asks whether any step deletes data that cannot be restored, changes production or a shared system, sends or publishes something to other people, or spends money. For each such step it states exactly what will be affected, prepares a way back where one exists, gets confirmation, and verifies afterwards. A fully specified one-statement production delete is Tier 1 in difficulty and still goes through the whole gate. Pushing a working branch or running the project's own checks is ordinary work and is not gated.
 
-### 3. Load only what the situation needs
+### 3. Run the tier
 
-The skill uses progressive disclosure. `SKILL.md` is short and always loaded when the skill triggers. Each reference file is read only when its situation comes up: delegating, handling untrusted content, writing the report, and so on. This keeps the context small.
+Tiers 1 and 2 run straight from `SKILL.md`. Tiers 3 to 5 follow the numbered steps in `references/working-method.md`.
+
+### 4. Load only what the situation needs
+
+The skill uses progressive disclosure. `SKILL.md` is short and is loaded when the skill triggers. Each reference file is read only when its situation comes up: delegating, handling untrusted content, writing a long report, and so on. This keeps the context small.
 
 ### Invariants
 
-At every tier: solve the request that was made, check claims against the real thing, use the smallest process that gives a correct result, confirm before destructive or outward-facing actions, verify by running, and lead every report with the outcome. The user's own rules and the project's conventions always take precedence over the skill.
+At every tier: solve the request that was made, check claims against the real thing, use the smallest process that gives a correct result, verify by running, and lead every report with the outcome. The user's own rules and the project's conventions always take precedence over the skill.
 
 ## Install
 
@@ -76,19 +82,29 @@ ln -s /path/to/work-like-fable-skill/work-like-fable ~/.claude/skills/work-like-
 
 ### Claude apps (claude.ai, desktop)
 
-Zip the `work-like-fable` folder so that the folder itself is the top level of the archive, then upload it where your plan lets you add custom skills.
+Zip the `work-like-fable` folder so that the folder itself is the top level of the archive (`work-like-fable.zip` containing `work-like-fable/SKILL.md`):
 
 ```bash
 cd work-like-fable-skill && zip -r work-like-fable.zip work-like-fable
 ```
 
-Start a new session after installing. The folder name must stay `work-like-fable` to match the `name` field in `SKILL.md`.
+Then go to **Customize > Skills**, click **+**, choose **Create skill**, then **Upload a skill**, and select the ZIP. For uploads, keep the folder name the same as the `name` field in `SKILL.md`. Plan availability and limits change; see [Using Skills in Claude](https://support.claude.com/en/articles/12512180-using-skills-in-claude).
+
+### Claude Agent SDK
+
+The SDK discovers skills in the same places as Claude Code, not from an arbitrary path. Put the folder at `<project>/.claude/skills/work-like-fable/` or `~/.claude/skills/work-like-fable/`. If you set the setting sources explicitly, include `user` and `project`; if you pass an explicit tool list, include `Skill`. See the [Agent SDK skills documentation](https://code.claude.com/docs/en/agent-sdk/skills.md).
+
+### Notes
+
+- Claude Code watches the skill folders, so a skill added under `~/.claude/skills/` or `.claude/skills/` is picked up in the running session without a restart. If the `skills` folder itself did not exist when the session started, run `/reload-skills`.
+- In Claude Code the `name` field is optional and defaults to the folder name; when set, it is the command you type.
+- These install details were checked against the official documentation on 2026-11-17: [Claude Code skills](https://code.claude.com/docs/en/skills).
 
 ## Use
 
 ### Automatic
 
-The skill's description tells Claude to load it at the start of a non-trivial task, when a task turns out harder than expected, or when you say things like "think it through", "do this properly", "plan and execute" or "research and implement".
+Claude loads the skill from its description: at the start of non-trivial work, or when you ask for something to be done properly.
 
 ### Explicit
 
@@ -137,7 +153,7 @@ For any non-trivial task, use the work-like-fable skill to choose the amount of 
 
 **Use it for long sessions.** For multi-hour work, ask for a status line at each stage boundary. `references/long-running-work.md` covers staying on track and what is worth saving to memory.
 
-**Use it with other models or agent frameworks.** The files are plain Markdown. Put `SKILL.md` in a system prompt and supply the reference files on demand, or load the folder as a skill in the Claude Agent SDK. `references/model-notes.md` is specific to Fable 5.2; replace or drop it for another model.
+**Use it with other models or agent frameworks.** The files are plain Markdown. Put `SKILL.md` in a system prompt and supply the reference files on demand. Lines marked **(Claude Code)** in the references name features of that environment and can be skipped elsewhere. `references/model-notes.md` is specific to Fable 5.2; replace or drop it for another model.
 
 **Use it as a team standard.** The playbook doubles as a checklist for people: a shared definition of what "verified" and "done" mean at each level of difficulty.
 
@@ -147,6 +163,17 @@ For any non-trivial task, use the work-like-fable skill to choose the amount of 
 - **Your own rules:** add a reference file (for example `references/team-conventions.md`) and a row for it in the "Step 3" table in `SKILL.md`.
 - **Trigger behaviour:** edit the `description` in the `SKILL.md` frontmatter; that text decides when Claude loads the skill.
 - **Keep `SKILL.md` short.** Detail belongs in `references/`, so it is loaded only when needed.
+
+## How it was tested
+
+Tested once, on 2026-11-17, with fresh Claude subagents. The sample is small; treat the results as indicative.
+
+- **Same bug, with and without the skill.** Two agents were given the same small Python project with an off-by-one bug that also existed in a second file. Both wrote failing tests first, fixed the reported bug, re-ran the suite, found the second instance and reported it for a decision. The outcome was the same. The skill cost three extra tool calls and changed only how the second instance was reasoned about and reported. On a small, well-specified bug, a capable model does not need this skill.
+- **Triage consistency.** Two agents independently tiered the same 14 tasks from the written rules alone. They agreed on 12 and reported having to guess on 5 to 9 of them. Both found the same flaws: difficulty and risk were mixed into one number, so a one-statement production delete was assigned a low tier with no safety step. The triage was rewritten in response, separating the difficulty tier from the risk gate.
+- **Triage retest.** Two new agents tiered the same 14 tasks from the rewritten rules. They agreed with each other on all 14 tiers and all 14 risk-gate decisions, and the production delete and the team email were both gated. They still had to guess on some tasks where the task left a deciding fact unstated, and they found further gaps (the boundary between Tiers 1 and 2, what counts as a shared system, an overstated definition of "reversible"). Those were fixed afterwards; that last round of fixes has not itself been retested.
+- **Documentation check.** The install instructions and the model notes were checked against the official pages. Several claims were corrected.
+
+Not yet tested: any task actually run at Tier 3, 4 or 5, non-coding work, other models, and the final round of triage wording.
 
 ## Limits
 

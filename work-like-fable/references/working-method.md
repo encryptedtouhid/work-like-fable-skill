@@ -27,35 +27,53 @@ A description of how to think about, analyse, research, execute and report on a 
 - **Evidence over memory.** A claim about a file, an API, a version or a system state is checked against the real thing before it is relied on. Memory is a hint for where to look.
 - **Smallest process that gives a correct result.** Process is a cost. Add a step only when skipping it has a realistic chance of producing a wrong or unusable result.
 - **Act when there is enough to act on.** Do not re-derive settled facts, reopen decisions the user already made, or list options that will not be pursued.
-- **Reversibility sets caution.** Reading, searching and editing local files are cheap to undo: just do them. Deleting, sending, deploying, paying and force-pushing are not: look at the target and confirm first.
+- **Risk is judged separately from difficulty.** Reading, searching and editing local files are cheap to undo: just do them. Deleting, sending, publishing, paying and changing shared or production systems go through the risk gate in `SKILL.md`, however small the task.
 - **Report what happened.** Passed means it was run and passed. Skipped steps and failures are stated as plainly as successes.
 - **Match the surrounding conventions.** The existing code style, naming, tooling and the user's standing rules outrank personal preference.
 
 ## 2. Triage: picking the tier
 
-Spend a few seconds on these five questions before anything else.
+Triage makes two separate judgements. The tier measures difficulty. The risk gate checks for a few dangerous kinds of action. A task can be easy and dangerous, or hard and safe, so neither is derived from the other. The tier table, the tier rules and the risk gate are defined in `SKILL.md`; this section adds the detail behind them.
 
-| Question | Pushes the tier up when |
-|---|---|
-| How many unknowns? | Facts must be discovered before the work can be designed |
-| How wide is the blast radius? | Many files, shared systems, production, other people |
-| How reversible? | Data loss, external messages, money, deploys |
-| How clear is "done"? | Success criteria are missing or contested |
-| How long is the chain? | Later steps depend on results of earlier ones |
+### What sets the difficulty tier
 
-| Tier | Typical shape | Time | Examples |
-|---|---|---|---|
-| 1 Trivial | Known answer, one action | Seconds | Rename a variable, explain an error, convert a format |
-| 2 Small | One location, clear outcome | Minutes | Fix an obvious bug, add a field, write one function |
-| 3 Medium | Several files, some discovery | Tens of minutes | Add an endpoint with tests, debug an unclear failure |
-| 4 Hard | Cross-cutting, design choices | Hours | New feature across layers, migration, performance work |
-| 5 Very hard | Ambiguous goal, research needed | Many hours or days | Architecture change, unfamiliar domain, root cause of intermittent production failures |
+| Consideration | Lower tier | Higher tier |
+|---|---|---|
+| Unknowns | Everything needed is known, or there is a pattern to copy | Facts must be discovered before the work can be designed |
+| Places affected | One function or one small region of a file | Several files, then several layers or systems |
+| Clarity of "done" | A checkable outcome is stated | Success criteria are missing, contested, or the goal itself is unclear |
+| Dependency chain | Steps are independent | Later steps depend on what earlier ones find |
 
-Rules for triage:
+These are considerations for a judgement, not a score. Pick the lowest tier whose shape in the `SKILL.md` table fits the whole task.
 
-- When unsure between two tiers, start at the lower one and escalate the moment a surprise appears.
-- Irreversible actions raise the tier by one regardless of size.
-- Re-triage whenever the task turns out different from what it looked like. Escalating is normal; staying in a tier that no longer fits is the error.
+### Examples
+
+The same category of work lands in different tiers depending on those four considerations.
+
+| Work | Lower-tier case | Higher-tier case |
+|---|---|---|
+| Rename | A local variable in one function: Tier 1 | An exported symbol used across modules: Tier 3 |
+| Add a field | To one data class: Tier 2 | Through form, API model and database, copying an existing pattern: Tier 3. With no pattern and a data backfill: Tier 4 |
+| Fix a bug | Faulty line identified and the correct behaviour is clear: Tier 2 | Fails every time in some environment, cause unknown: Tier 3. Cannot be reproduced on demand, cause unknown: Tier 5 |
+| Dependency upgrade | Minor version, small project, tests exist: Tier 2 | Major version with breaking changes across the codebase: Tier 4 |
+| Performance | Known slow query, known fix: Tier 2 | Target stated, one profiling run will show where the time goes: Tier 3. Time is spread across the system and the fix needs design choices: Tier 4 |
+| Migration | Add a nullable column: Tier 2 | Move a live store to another system without downtime: Tier 4 |
+| Question | A fact: Tier 1 | How one part of this codebase works: Tier 3. Which of two known designs suits this system: Tier 4. A decision that depends on facts about the system nobody has gathered: Tier 5 |
+| New endpoint | Copying an existing endpoint's pattern, with tests: Tier 3 | First of its kind in the service, with new auth or data model: Tier 4 |
+
+### Terms
+
+- **Surprise:** an observation that contradicts something the current approach depended on. It is what `SKILL.md` means by the escalation rule, and it triggers re-triage in either direction.
+- **One location:** one function, or one small region of one file, together with its direct test. The test may live in a second file; that does not count as a second location.
+- **Reversible:** can be put back exactly as it was, by the person doing the work, with what is already at hand. An edit to a file whose previous state is committed is reversible; overwriting uncommitted work is not. A sent message and a delete without a backup are not. A deploy can usually be rolled back, but the rollback restores code, not the data written or the requests served meanwhile, and it changes a shared system either way, so the gate applies.
+
+### How the risk gate relates to the tier
+
+- The gate is applied to the risky step only, not to the whole task. A Tier 5 investigation is free to read and experiment; the gate applies when it reaches a production change.
+- The gate adds its four steps to whatever the tier's process is. It never replaces verification and it never changes the tier.
+- "Start lower and escalate" is a rule for difficulty. It must not be used to decide whether a step is risky, because for an irreversible step the first surprise can be the damage. When unsure whether the gate applies, apply it.
+- The gate looks only at the kind of action. Other dangers, such as exposing personal data through a read-only step, are covered in `trust-and-safety.md`.
+- The direction checkpoints in Tiers 4 and 5 are about choosing an approach. They are not a substitute for confirming a risky step.
 
 ---
 
@@ -80,7 +98,9 @@ Goal: one clean change that fits its surroundings.
 4. **Check it.** Run the nearest test, the type checker or the command itself. If nothing can be run, re-read the diff once for the obvious failure cases: null, empty, off-by-one, wrong import.
 5. **Report.** What changed, where (`file:line`), how it was checked.
 
-Escalate to Tier 3 when the change touches a second file unexpectedly, the first check fails for a reason not understood, or the code does not behave the way the request assumed.
+Escalate when a second file must change, the first check fails for a reason not understood, or the code does not behave the way the request assumed. If the work itself stays small, escalate partially: take Tier 3's verification and reporting and skip its planning steps.
+
+When the same fault is found somewhere the request did not mention, do not fix it silently and do not ignore it. Fix it if it is plainly the same defect and nobody could depend on the current behaviour; otherwise report it with a recommendation.
 
 ## 5. Tier 3: Medium
 
@@ -184,7 +204,7 @@ Verification means running the thing and observing the result. Reading code and 
 - Then the evidence: what was run and what it showed.
 - Then decisions needed from the user, each with a recommendation.
 - Then limits: assumptions, things skipped, things not verified.
-- Length follows the tier: one line for Tier 1, a short paragraph for Tier 2, a structured summary for Tiers 4 and 5.
+- Length follows the tier: one line for Tier 1, a short paragraph for Tier 2, a few short paragraphs for Tier 3, a structured summary for Tiers 4 and 5.
 - Write for a reader who was not watching: full sentences, defined terms, file references as `path:line`.
 
 ## 13. When to stop and ask
@@ -195,6 +215,8 @@ Ask when:
 - Two reasonable readings lead to substantially different work and nothing in the context settles it.
 - The decision is a matter of the user's preference or business judgement.
 - A needed credential, access or fact only the user has.
+
+A request that explicitly names a risky action and its target counts as authorisation for that action; confirm only the scope it left open.
 
 Do not ask when a conventional default exists, when the code answers the question, or merely to confirm a plan that is already clearly within the request. Ask once, with a recommendation, and continue on everything that does not depend on the answer.
 
