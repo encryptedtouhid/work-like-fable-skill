@@ -121,7 +121,7 @@ In short:
 
 Known gaps:
 
-- No task was run at Tier 3, 4 or 5, and no non-coding work was tested. The twenty playbooks are written guidance; none has been run in a test.
+- No task was run at Tier 3, 4 or 5, and no non-coding work was tested. The seven newest playbooks (financial analysis, machine learning, scientific research, mobile, spreadsheets, browser automation, creative work) were each run once with Haiku and Sonnet, with and without the skill. Both models avoided the planted trap in every task either way, so those runs showed no measurable gain from the playbooks. The other thirteen playbooks have not been run in a test.
 - The install steps and model notes were checked against the official pages through an automated summary, so wording may not be exact.
 
 ## Customise
